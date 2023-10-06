@@ -58,6 +58,7 @@ dependencies {
 
     val lifecycleVersion = "2.6.2"
     val hiltVersion = "2.44.2"
+    val retrofitVersion = "2.9.0"
 
     // Region bom
 
@@ -77,6 +78,13 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+
+    // Dependencies for retrofit
+
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     // Dependencies for navigation
 
@@ -100,7 +108,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
 
-    // Dependencies for Moshi
+    // Dependencies for gson
 
     implementation("com.google.code.gson:gson:2.10.1")
 }
