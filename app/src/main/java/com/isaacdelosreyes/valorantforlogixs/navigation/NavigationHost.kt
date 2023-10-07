@@ -36,7 +36,9 @@ fun NavigationHost(
                 type = NavType.StringType
             })
         ) {
-            DetailScreen()
+            DetailScreen {
+                navController.popBackStack()
+            }
         }
     }
 }

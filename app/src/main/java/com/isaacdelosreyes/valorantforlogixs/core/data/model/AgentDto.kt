@@ -18,7 +18,7 @@ data class AgentDto(
     val isFullPortraitRightFacing: Boolean?,
     val isPlayableCharacter: Boolean?,
     val killfeedPortrait: String?,
-    val roleDto: RoleDto?,
+    val role: RoleDto?,
     val uuid: String?,
 )
 
@@ -41,7 +41,7 @@ fun AgentDto.toDomain() =
         isFullPortraitRightFacing = isFullPortraitRightFacing ?: false,
         isPlayableCharacter = isPlayableCharacter ?: false,
         killfeedPortrait = killfeedPortrait.orEmpty(),
-        role = roleDto?.toDomain() ?: Role(
+        role = role?.toDomain() ?: Role(
             assetPath = "",
             description = "",
             displayIcon = "",
