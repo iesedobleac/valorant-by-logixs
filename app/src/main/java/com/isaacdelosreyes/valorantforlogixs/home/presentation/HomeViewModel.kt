@@ -28,9 +28,7 @@ class HomeViewModel @Inject constructor(
 
                 is NetworkResult.Success -> {
 
-                    println(call.data.data)
-
-                    val agents = call.data.data
+                    val agents = call.data.agents
                         ?.filter { !it.background.isNullOrEmpty() }
                         ?.distinctBy { it.displayName }
                         ?.map { it.toDomain() }

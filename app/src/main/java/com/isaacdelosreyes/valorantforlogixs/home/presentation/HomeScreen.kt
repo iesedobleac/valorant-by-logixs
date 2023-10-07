@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.BlackGray
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Cyprus
+import com.isaacdelosreyes.valorantforlogixs.ui.theme.RobotoFamily
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Tugnsten
 
 @Composable
@@ -113,6 +114,7 @@ fun HomeScreen(
                             text = it.developerName,
                             fontSize = 14.sp,
                             textAlign = TextAlign.Center,
+                            fontFamily = RobotoFamily,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
                             modifier = Modifier.fillMaxWidth()
