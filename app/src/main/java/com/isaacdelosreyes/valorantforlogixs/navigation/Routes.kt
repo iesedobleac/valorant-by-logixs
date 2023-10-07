@@ -4,4 +4,9 @@ sealed class Routes(val route: String) {
 
     object Home : Routes("home")
 
+    object Detail: Routes("detail") {
+        fun createRoute(agentUuid: String) =
+            "$route/$agentUuid"
+    }
+
 }
