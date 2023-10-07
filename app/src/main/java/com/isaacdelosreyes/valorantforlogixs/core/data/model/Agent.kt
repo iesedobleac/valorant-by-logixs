@@ -6,7 +6,6 @@ data class Agent(
     val background: String,
     val backgroundGradientColors: List<String>,
     val bustPortrait: String,
-    val characterTags: List<String>,
     val description: String,
     val developerName: String,
     val displayIcon: String,
@@ -19,8 +18,7 @@ data class Agent(
     val isFullPortraitRightFacing: Boolean,
     val isPlayableCharacter: Boolean,
     val killfeedPortrait: String,
-    val recruitmentData: RecruitmentData,
     val role: Role,
     val uuid: String,
-    val voiceLine: Any
 )
+

@@ -7,3 +7,12 @@ data class Role(
     val displayName: String,
     val uuid: String
 )
+
+fun RoleDto.toDomain() =
+    Role(
+        assetPath = assetPath.orEmpty(),
+        description = description.orEmpty(),
+        displayIcon = displayIcon.orEmpty(),
+        displayName = displayName.orEmpty(),
+        uuid = uuid.orEmpty()
+    )
