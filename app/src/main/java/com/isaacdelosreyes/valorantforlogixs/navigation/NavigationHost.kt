@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.isaacdelosreyes.valorantforlogixs.detail.presentation.DetailScreen
 import com.isaacdelosreyes.valorantforlogixs.home.presentation.HomeScreen
+import com.isaacdelosreyes.valorantforlogixs.maps.presentation.MapsScreen
 import com.isaacdelosreyes.valorantforlogixs.utils.AGENT_UUID
 
 @Composable
@@ -39,6 +40,10 @@ fun NavigationHost(
             DetailScreen {
                 navController.popBackStack()
             }
+        }
+
+        composable(Routes.Maps.route) {
+            MapsScreen()
         }
     }
 }
