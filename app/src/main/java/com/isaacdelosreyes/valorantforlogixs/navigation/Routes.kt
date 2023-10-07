@@ -9,4 +9,6 @@ sealed class Routes(val route: String) {
             "$route/$agentUuid"
     }
 
+    object Maps: Routes("maps")
+
 }
