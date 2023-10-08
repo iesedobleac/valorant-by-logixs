@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ValorantForLogixs</string>
+
+    <string name="top_app_bar_home_title">Home</string>
+    <string name="top_app_bar_maps_title">Maps</string>
+
+    <string name="biography">Biography</string>
+    <string name="abilities">Abilities</string>
+    <string name="description">Description</string>
+    <string name="map">Map</string>
+
+    <string name="attention">Attention</string>
+    <string name="default_error">A problem has occurred agent. Please try again</string>
+    <string name="no_agent_error">We have not been able to upload the agent\'s information, but don\'t panic!</string>
+    <string name="no_map_error">Sorry, we can\'t find the map right now, try Google Maps.</string>
+
+</resources>
