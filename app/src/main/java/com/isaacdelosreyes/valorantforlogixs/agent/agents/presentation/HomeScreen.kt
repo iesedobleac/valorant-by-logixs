@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,17 +50,11 @@ fun HomeScreen(
     val state = viewModel.state
 
     if (state.showErrorScreen) {
-        ErrorScreen(
-            errorMessage = stringResource(id = R.string.default_error),
-            showBackButton = false,
-            clickOnRetryButton = {
-                viewModel.getAgents()
-            },
-            modifier = Modifier.background(BlackGray)
-        )
+        showErrorScreen {
+            viewModel.getAgents()
+        }
 
     } else {
-
         Column(modifier = Modifier.background(BlackGray)) {
 
             if (state.showLoaderComponent) {
@@ -73,100 +66,121 @@ fun HomeScreen(
                 }
 
             } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(
-                        bottom = 10.dp,
-                        start = 10.dp,
-                        end = 10.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(weight = 1f)
-                ) {
 
-                    items(state.agents) {
+                if (!state.agents.isNullOrEmpty()) {
 
-                        val colors = it.backgroundGradientColors.map { color ->
-                            val colorAndroid = "#$color".toColorInt()
-                            Color(colorAndroid)
-                        }
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(
+                            bottom = 10.dp,
+                            start = 10.dp,
+                            end = 10.dp
+                        ),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(weight = 1f)
+                    ) {
 
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(300.dp)
-                                .clickable {
-                                    navigateToDetailScreen(it.uuid)
-                                }
-                        ) {
+                        items(state.agents) {
+
+                            val colors = it.backgroundGradientColors.map { color ->
+                                val colorAndroid = "#$color".toColorInt()
+                                Color(colorAndroid)
+                            }
 
                             Box(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(top = 60.dp)
-                                    .clip(
-                                        RoundedCornerShape(
-                                            topEnd = 10.dp,
-                                            topStart = 10.dp
-                                        )
-                                    )
-                                    .background(Brush.verticalGradient(colors = colors))
-                            )
-
-                            SubcomposeAsyncImage(
-                                model = it.fullPortraitV2,
-                                contentDescription = "",
-                                loading = {
-                                    ValorantLoader(
-                                        color = MaterialTheme.colorScheme.onPrimary
-                                    )
-                                },
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            )
-
-                            Column(
-                                modifier = Modifier
-                                    .clip(
-                                        RoundedCornerShape(
-                                            topStart = 10.dp,
-                                            topEnd = 10.dp
-                                        )
-                                    )
-                                    .background(Cyprus)
-                                    .align(BottomCenter)
+                                    .fillMaxWidth()
+                                    .height(300.dp)
+                                    .clickable {
+                                        navigateToDetailScreen(it.uuid)
+                                    }
                             ) {
 
-                                Spacer(modifier = Modifier.height(10.dp))
-
-                                Text(
-                                    text = it.displayName,
-                                    fontSize = 28.sp,
-                                    textAlign = TextAlign.Center,
-                                    fontFamily = Tugnsten,
-                                    color = Color.White,
-                                    modifier = Modifier.fillMaxWidth()
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(top = 60.dp)
+                                        .clip(
+                                            RoundedCornerShape(
+                                                topEnd = 10.dp,
+                                                topStart = 10.dp
+                                            )
+                                        )
+                                        .background(Brush.verticalGradient(colors = colors))
                                 )
 
-                                Text(
-                                    text = it.developerName,
-                                    fontSize = 14.sp,
-                                    textAlign = TextAlign.Center,
-                                    fontFamily = RobotoFamily,
-                                    color = Color.White,
-                                    modifier = Modifier.fillMaxWidth()
+                                SubcomposeAsyncImage(
+                                    model = it.fullPortraitV2,
+                                    contentDescription = "",
+                                    loading = {
+                                        ValorantLoader(
+                                            color = MaterialTheme.colorScheme.onPrimary
+                                        )
+                                    },
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .fillMaxSize()
                                 )
 
-                                Spacer(modifier = Modifier.height(10.dp))
+                                Column(
+                                    modifier = Modifier
+                                        .clip(
+                                            RoundedCornerShape(
+                                                topStart = 10.dp,
+                                                topEnd = 10.dp
+                                            )
+                                        )
+                                        .background(Cyprus)
+                                        .align(BottomCenter)
+                                ) {
+
+                                    Spacer(modifier = Modifier.height(10.dp))
+
+                                    Text(
+                                        text = it.displayName,
+                                        fontSize = 28.sp,
+                                        textAlign = TextAlign.Center,
+                                        fontFamily = Tugnsten,
+                                        color = Color.White,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+
+                                    Text(
+                                        text = it.developerName,
+                                        fontSize = 14.sp,
+                                        textAlign = TextAlign.Center,
+                                        fontFamily = RobotoFamily,
+                                        color = Color.White,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                }
                             }
                         }
+                    }
+
+                } else {
+                    showErrorScreen {
+                        viewModel.getAgents()
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun showErrorScreen(clickOnRetryButton: () -> Unit) {
+    ErrorScreen(
+        errorMessage = stringResource(id = R.string.default_error),
+        showBackButton = false,
+        clickOnRetryButton = {
+            clickOnRetryButton()
+        },
+        modifier = Modifier.background(BlackGray)
+    )
 }

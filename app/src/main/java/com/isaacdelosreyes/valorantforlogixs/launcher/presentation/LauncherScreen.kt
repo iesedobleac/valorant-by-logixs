@@ -22,7 +22,7 @@ import kotlinx.coroutines.delay
 fun LauncherScreen(navigateToHome: () -> Unit = {}) {
 
     LaunchedEffect(key1 = Unit) {
-        delay(3000)
+        delay(1500)
         navigateToHome()
     }
 
