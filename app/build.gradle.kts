@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
 
@@ -63,7 +64,7 @@ dependencies {
     // Region bom
 
     implementation(platform("androidx.compose:compose-bom:2023.05.01"))
-    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
     // Dependencies for Jetpack Compose
 
