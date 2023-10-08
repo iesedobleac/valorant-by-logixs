@@ -3,6 +3,7 @@ package com.isaacdelosreyes.valorantforlogixs.navigation
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -13,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.isaacdelosreyes.valorantforlogixs.ui.theme.RadicalRed
 
 @Composable
 fun BottomNavigationBar(
@@ -47,7 +47,7 @@ fun BottomNavigationBar(
                         }
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        indicatorColor = RadicalRed,
+                        indicatorColor = MaterialTheme.colorScheme.secondary,
                         selectedIconColor = Color.White
                     )
                 )

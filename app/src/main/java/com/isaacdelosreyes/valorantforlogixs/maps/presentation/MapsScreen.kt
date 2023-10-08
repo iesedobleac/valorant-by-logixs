@@ -20,10 +20,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.isaacdelosreyes.valorantforlogixs.R
+import com.isaacdelosreyes.valorantforlogixs.core.presentation.ErrorScreen
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.BlackGray
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Tugnsten
 
@@ -32,60 +35,69 @@ fun MapsScreen(viewModel: MapsViewModel = hiltViewModel(), navigateToMapDetail: 
 
     val state = viewModel.state
 
-    LazyColumn(
-        content = {
-            items(state.maps) {
+    if (state.showErrorScreen) {
+        ErrorScreen(
+            errorMessage = stringResource(id = R.string.default_error),
+            clickOnRetryButton = {
+                viewModel.getMaps()
+            },
+            modifier = Modifier.background(BlackGray)
+        )
 
-                Box(
-                    modifier = Modifier
+    } else {
+        LazyColumn(
+            content = {
+                items(state.maps) {
+
+                    Box(modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .clickable { navigateToMapDetail(it.uuid) }
-                ) {
+                    ) {
 
-                    AsyncImage(
-                        model = it.splash,
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    )
+                        AsyncImage(
+                            model = it.splash,
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    listOf(
-                                        Color.Transparent,
-                                        Color.Black
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            Color.Transparent,
+                                            Color.Black
+                                        )
                                     )
                                 )
-                            )
-                    )
+                        )
 
-                    Text(
-                        text = it.displayName,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(start = 20.dp, bottom = 20.dp),
-                        fontFamily = Tugnsten,
-                        color = Color.White,
-                        fontSize = 28.sp
-                    )
+                        Text(
+                            text = it.displayName,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(start = 20.dp, bottom = 20.dp),
+                            fontFamily = Tugnsten,
+                            color = Color.White,
+                            fontSize = 28.sp
+                        )
+                    }
                 }
-            }
-        },
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(
-            top = 20.dp,
-            bottom = 10.dp,
-            start = 10.dp,
-            end = 10.dp
-        ),
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BlackGray)
-    )
+            },
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(
+                top = 20.dp,
+                bottom = 10.dp,
+                start = 10.dp,
+                end = 10.dp
+            ),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BlackGray)
+        )
+    }
 }

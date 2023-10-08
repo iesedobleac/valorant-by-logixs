@@ -15,14 +15,18 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,6 +34,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.isaacdelosreyes.valorantforlogixs.R
+import com.isaacdelosreyes.valorantforlogixs.core.presentation.ErrorScreen
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.BlackGray
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Cyprus
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.RobotoFamily
@@ -43,84 +49,115 @@ fun HomeScreen(
 
     val state = viewModel.state
 
-    Column(modifier = Modifier.background(BlackGray)) {
+    if (state.showErrorScreen) {
+        ErrorScreen(
+            errorMessage = stringResource(id = R.string.default_error),
+            clickOnRetryButton = {
+                viewModel.getAgents()
+            },
+            modifier = Modifier.background(BlackGray)
+        )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(bottom = 10.dp, start = 10.dp, end = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(weight = 1f)
-        ) {
+    } else {
 
-            items(state.agents) {
+        Column(modifier = Modifier.background(BlackGray)) {
 
-                val colors = it.backgroundGradientColors.map { color ->
-                    val colorAndroid = "#$color".toColorInt()
-                    Color(colorAndroid)
+            if (state.showLoaderComponent) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Center),
+                        color = MaterialTheme.colorScheme.secondary
+                    )
                 }
 
-                Box(
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(
+                        bottom = 10.dp,
+                        start = 10.dp,
+                        end = 10.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .clickable {
-                            navigateToDetailScreen(it.uuid)
-                        }
+                        .fillMaxSize()
+                        .weight(weight = 1f)
                 ) {
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 60.dp)
-                            .clip(RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp))
-                            .background(Brush.verticalGradient(colors = colors))
-                    )
+                    items(state.agents) {
 
-                    AsyncImage(
-                        model = it.fullPortraitV2,
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                    )
+                        val colors = it.backgroundGradientColors.map { color ->
+                            val colorAndroid = "#$color".toColorInt()
+                            Color(colorAndroid)
+                        }
 
-                    Column(
-                        modifier = Modifier
-                            .clip(
-                                RoundedCornerShape(
-                                    topStart = 10.dp,
-                                    topEnd = 10.dp
-                                )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                                .clickable {
+                                    navigateToDetailScreen(it.uuid)
+                                }
+                        ) {
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 60.dp)
+                                    .clip(
+                                        RoundedCornerShape(
+                                            topEnd = 10.dp,
+                                            topStart = 10.dp
+                                        )
+                                    )
+                                    .background(Brush.verticalGradient(colors = colors))
                             )
-                            .background(Cyprus)
-                            .align(BottomCenter)
-                    ) {
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                            AsyncImage(
+                                model = it.fullPortraitV2,
+                                contentDescription = "",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            )
 
-                        Text(
-                            text = it.displayName,
-                            fontSize = 28.sp,
-                            textAlign = TextAlign.Center,
-                            fontFamily = Tugnsten,
-                            color = Color.White,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                            Column(
+                                modifier = Modifier
+                                    .clip(
+                                        RoundedCornerShape(
+                                            topStart = 10.dp,
+                                            topEnd = 10.dp
+                                        )
+                                    )
+                                    .background(Cyprus)
+                                    .align(BottomCenter)
+                            ) {
 
-                        Text(
-                            text = it.developerName,
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Center,
-                            fontFamily = RobotoFamily,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                                Spacer(modifier = Modifier.height(10.dp))
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                                Text(
+                                    text = it.displayName,
+                                    fontSize = 28.sp,
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = Tugnsten,
+                                    color = Color.White,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                Text(
+                                    text = it.developerName,
+                                    fontSize = 14.sp,
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = RobotoFamily,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
+                        }
                     }
                 }
             }

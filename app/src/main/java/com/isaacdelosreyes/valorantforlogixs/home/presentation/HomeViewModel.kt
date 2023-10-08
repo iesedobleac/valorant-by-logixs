@@ -5,12 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.AgentsDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.toDomain
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.NetworkResult
 import com.isaacdelosreyes.valorantforlogixs.home.domain.usecase.GetAgentsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,30 +26,57 @@ class HomeViewModel @Inject constructor(
         private set
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        getAgents()
+    }
 
+    fun getAgents() {
+        state = state.copy(showLoaderComponent = true)
+
+        viewModelScope.launch(Dispatchers.IO) {
             when (val call = getAgentsFromRemoteUseCase()) {
 
                 is NetworkResult.Success -> {
-
-                    val agents = call.data.agents
-                        ?.filter { !it.background.isNullOrEmpty() }
-                        ?.distinctBy { it.displayName }
-                        ?.map { it.toDomain() }
-
-                    state = state.copy(
-                        agents = agents.orEmpty()
-                    )
+                    Timber.i(call.data.toString())
+                    parseDataAndSetState(call)
                 }
 
                 is NetworkResult.Error -> {
-                    //no-op
+                    Timber.e(message = call.message)
+
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(
+                            showErrorScreen = true,
+                            showLoaderComponent = false
+                        )
+                    }
                 }
 
                 is NetworkResult.Exception -> {
-                    //no-op
+                    FirebaseCrashlytics.getInstance().recordException(call.e)
+
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(
+                            showErrorScreen = true,
+                            showLoaderComponent = false
+                        )
+                    }
                 }
             }
+        }
+    }
+
+    private suspend fun parseDataAndSetState(call: NetworkResult.Success<AgentsDto>) {
+        val agents = call.data.agents
+            ?.filter { !it.background.isNullOrEmpty() }
+            ?.distinctBy { it.displayName }
+            ?.map { it.toDomain() }
+
+        withContext(Dispatchers.Main) {
+            state = state.copy(
+                agents = agents.orEmpty(),
+                showErrorScreen = false,
+                showLoaderComponent = false
+            )
         }
     }
 }

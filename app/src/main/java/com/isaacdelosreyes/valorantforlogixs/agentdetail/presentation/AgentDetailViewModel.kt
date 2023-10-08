@@ -8,12 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.isaacdelosreyes.valorantforlogixs.agentdetail.domain.usecase.GetAgentByUuidUseCase
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.Ability
+import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.AgentByUuidDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.toDomain
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.NetworkResult
 import com.isaacdelosreyes.valorantforlogixs.utils.AGENT_UUID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,23 +34,44 @@ class AgentDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val call = getAgentByUuidUseCase(agentUuid.orEmpty())) {
 
-                is NetworkResult.Error -> {
+                is NetworkResult.Success -> {
+                    Timber.i(call.data.toString())
+                    parseAgentDataAndSetState(call)
+                }
 
+                is NetworkResult.Error -> {
+                    Timber.e(message = call.message)
+
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(
+                            showErrorScreen = true,
+                            showLoaderComponent = false
+                        )
+                    }
                 }
 
                 is NetworkResult.Exception -> {
-
-                }
-
-                is NetworkResult.Success -> {
-                    val agent = call.data.agent.toDomain()
-
-                    state = state.copy(
-                        agent = agent,
-                        selectedAbility = agent?.abilities?.get(0)
-                    )
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(
+                            showErrorScreen = true,
+                            showLoaderComponent = false
+                        )
+                    }
                 }
             }
+        }
+    }
+
+    private suspend fun parseAgentDataAndSetState(call: NetworkResult.Success<AgentByUuidDto>) {
+        val agent = call.data.agent.toDomain()
+
+        withContext(Dispatchers.Main) {
+            state = state.copy(
+                agent = agent,
+                selectedAbility = agent.abilities[0],
+                showErrorScreen = false,
+                showLoaderComponent = false
+            )
         }
     }
 
