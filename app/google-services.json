@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "451994563299",
+    "project_id": "valorantforlogixs",
+    "storage_bucket": "valorantforlogixs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451994563299:android:52fdd0d6eabca4bfbf4bd6",
+        "android_client_info": {
+          "package_name": "com.isaacdelosreyes.valorantforlogixs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJPSnoggLGBfCkcEx-8phnTiqZcfvMW2w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
