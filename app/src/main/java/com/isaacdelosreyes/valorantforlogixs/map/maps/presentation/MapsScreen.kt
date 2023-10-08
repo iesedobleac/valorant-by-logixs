@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,74 +40,101 @@ fun MapsScreen(viewModel: MapsViewModel = hiltViewModel(), navigateToMapDetail: 
     val state = viewModel.state
 
     if (state.showErrorScreen) {
-        ErrorScreen(
-            errorMessage = stringResource(id = R.string.default_error),
-            showBackButton = false,
-            clickOnRetryButton = {
-                viewModel.getMaps()
-            },
-            modifier = Modifier.background(BlackGray)
-        )
+        showErrorScreen {
+            viewModel.getMaps()
+        }
 
     } else {
-        LazyColumn(
-            content = {
-                items(state.maps) {
-
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .clickable { navigateToMapDetail(it.uuid) }
-                    ) {
-
-                        SubcomposeAsyncImage(
-                            model = it.splash,
-                            contentDescription = "",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
-                            loading = {
-                                ValorantLoader(
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        )
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    Brush.verticalGradient(
-                                        listOf(
-                                            Color.Transparent,
-                                            Color.Black
-                                        )
-                                    )
-                                )
-                        )
-
-                        Text(
-                            text = it.displayName,
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(start = 20.dp, bottom = 20.dp),
-                            fontFamily = Tugnsten,
-                            color = Color.White,
-                            fontSize = 28.sp
-                        )
-                    }
-                }
-            },
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(
-                top = 20.dp,
-                bottom = 10.dp,
-                start = 10.dp,
-                end = 10.dp
-            ),
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(BlackGray)
-        )
+        ) {
+            if (state.showLoaderComponent) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(
+                        top = 20.dp,
+                        bottom = 10.dp,
+                        start = 10.dp,
+                        end = 10.dp
+                    ),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(state.maps) {
+
+                        if (!state.maps.isNullOrEmpty()) {
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(180.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable { navigateToMapDetail(it.uuid) }
+                            ) {
+
+                                SubcomposeAsyncImage(
+                                    model = it.splash,
+                                    contentDescription = "",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize(),
+                                    loading = {
+                                        ValorantLoader(
+                                            color = MaterialTheme.colorScheme.onPrimary
+                                        )
+                                    }
+                                )
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(
+                                            Brush.verticalGradient(
+                                                listOf(
+                                                    Color.Transparent,
+                                                    Color.Black
+                                                )
+                                            )
+                                        )
+                                )
+
+                                Text(
+                                    text = it.displayName,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .padding(start = 20.dp, bottom = 20.dp),
+                                    fontFamily = Tugnsten,
+                                    color = Color.White,
+                                    fontSize = 28.sp
+                                )
+                            }
+
+                        } else {
+                            showErrorScreen {
+                                viewModel.getMaps()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
+}
+
+@Composable
+fun showErrorScreen(clickOnRetryButton: () -> Unit) {
+    ErrorScreen(
+        errorMessage = stringResource(id = R.string.default_error),
+        showBackButton = false,
+        clickOnRetryButton = {
+            clickOnRetryButton()
+        },
+        modifier = Modifier.background(BlackGray)
+    )
 }
