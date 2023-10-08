@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.isaacdelosreyes.valorantforlogixs.navigation.BottomNavigationBar
 import com.isaacdelosreyes.valorantforlogixs.navigation.NavigationHost
 import com.isaacdelosreyes.valorantforlogixs.navigation.TopLevelDestination
+import com.isaacdelosreyes.valorantforlogixs.navigation.currentRoute
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.ValorantForLogixsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,4 +1,4 @@
-package com.isaacdelosreyes.valorantforlogixs.core.data.model
+package com.isaacdelosreyes.valorantforlogixs.core.data.model.agent
 
 data class Agent(
     val abilities: List<Ability>,

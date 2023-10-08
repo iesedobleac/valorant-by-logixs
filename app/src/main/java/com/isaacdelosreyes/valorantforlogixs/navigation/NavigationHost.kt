@@ -8,10 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.isaacdelosreyes.valorantforlogixs.detail.presentation.DetailScreen
+import com.isaacdelosreyes.valorantforlogixs.agentdetail.presentation.AgentDetailScreen
 import com.isaacdelosreyes.valorantforlogixs.home.presentation.HomeScreen
+import com.isaacdelosreyes.valorantforlogixs.mapdetail.presentation.MapDetailScreen
 import com.isaacdelosreyes.valorantforlogixs.maps.presentation.MapsScreen
 import com.isaacdelosreyes.valorantforlogixs.utils.AGENT_UUID
+import com.isaacdelosreyes.valorantforlogixs.utils.MAP_UUID
 
 @Composable
 fun NavigationHost(
@@ -26,28 +28,44 @@ fun NavigationHost(
         composable(Routes.Home.route) {
             HomeScreen {
                 navController.navigate(
-                    route = Routes.Detail.createRoute(it)
+                    route = Routes.AgentDetail.createRoute(it)
                 )
             }
         }
 
         composable(
-            route = "${Routes.Detail.route}/{${NavArgs.AgentUuid.key}}",
+            route = "${Routes.AgentDetail.route}/{${NavArgs.AgentUuid.key}}",
             arguments = listOf(navArgument(NavArgs.AgentUuid.key) {
                 type = NavType.StringType
             })
         ) {
-            DetailScreen {
+            AgentDetailScreen {
                 navController.popBackStack()
             }
         }
 
         composable(Routes.Maps.route) {
-            MapsScreen()
+            MapsScreen {
+                navController.navigate(
+                    route = Routes.MapDetail.createRoute(it)
+                )
+            }
+        }
+
+        composable(
+            route = "${Routes.MapDetail.route}/{${NavArgs.MapUuid.key}}",
+            arguments = listOf(navArgument(NavArgs.MapUuid.key) {
+                type = NavType.StringType
+            })
+        ) {
+            MapDetailScreen {
+                navController.popBackStack()
+            }
         }
     }
 }
 
 enum class NavArgs(val key: String) {
-    AgentUuid(AGENT_UUID)
+    AgentUuid(AGENT_UUID),
+    MapUuid(MAP_UUID)
 }

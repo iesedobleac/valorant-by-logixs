@@ -23,39 +23,47 @@ fun BottomNavigationBar(
 
     val currentRoute = currentRoute(navController = navController)
 
-    NavigationBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp),
-        containerColor = Color.White,
+    if (!showNavigationBar(currentRoute = currentRoute)) {
 
-        ) {
-        items.forEach { screen ->
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = screen.selectedIcon,
-                        contentDescription = ""
+        NavigationBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            containerColor = Color.White,
+
+            ) {
+            items.forEach { screen ->
+                NavigationBarItem(
+                    icon = {
+                        Icon(
+                            imageVector = screen.selectedIcon,
+                            contentDescription = ""
+                        )
+                    },
+                    selected = currentRoute == screen.route,
+                    onClick = {
+                        if (currentRoute != screen.route) {
+                            navController.navigate(screen.route)
+                        }
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = RadicalRed,
+                        selectedIconColor = Color.White
                     )
-                },
-                selected = currentRoute == screen.route,
-                onClick = {
-                    if (currentRoute != screen.route) {
-                        navController.navigate(screen.route)
-                    }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = RadicalRed,
-                    selectedIconColor = Color.White
                 )
-            )
+            }
         }
     }
 }
 
-
 @Composable
-private fun currentRoute(navController: NavHostController): String {
+fun currentRoute(navController: NavHostController): String {
     val currentDestination by navController.currentBackStackEntryAsState()
     return currentDestination?.destination?.route ?: Routes.Home.route
+}
+
+@Composable
+fun showNavigationBar(currentRoute: String): Boolean {
+    return currentRoute.contains(Routes.AgentDetail.route)
+            || currentRoute.contains(Routes.MapDetail.route)
 }

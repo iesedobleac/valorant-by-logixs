@@ -9,7 +9,7 @@ val BlackGray = Color(0xFF08121A)
 
 val SherpaBlue50 = Color(0xFF00151A)
 
-val WhiteBroken = Color(0xFF004353)
+val WhiteBroken = Color(0xFFCDF5FF)
 
 val Cyprus = Color(0xFF00333F)
 val RadicalRed = Color(0xFFFF2B52)

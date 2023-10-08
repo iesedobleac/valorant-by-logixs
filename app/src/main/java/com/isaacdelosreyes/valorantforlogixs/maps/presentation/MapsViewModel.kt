@@ -1,40 +1,41 @@
-package com.isaacdelosreyes.valorantforlogixs.home.presentation
+package com.isaacdelosreyes.valorantforlogixs.maps.presentation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.toDomain
+import com.isaacdelosreyes.valorantforlogixs.core.data.model.map.toDomain
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.NetworkResult
-import com.isaacdelosreyes.valorantforlogixs.home.domain.usecase.GetAgentsUseCase
+import com.isaacdelosreyes.valorantforlogixs.maps.domain.usecase.GetMapsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val getAgentsFromRemoteUseCase: GetAgentsUseCase
+class MapsViewModel @Inject constructor(
+    private val getMapsUseCase: GetMapsUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(HomeState())
+    var state by mutableStateOf(MapsState())
         private set
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
 
-            when (val call = getAgentsFromRemoteUseCase()) {
+            when (val call = getMapsUseCase()) {
 
                 is NetworkResult.Success -> {
 
-                    val agents = call.data.agents
-                        ?.filter { !it.background.isNullOrEmpty() }
-                        ?.distinctBy { it.displayName }
-                        ?.map { it.toDomain() }
+                    val maps = call.data.maps?.map { it.toDomain() }
+                        ?.filter {
+                            !it.displayIcon.isNullOrEmpty()
+                                    && !it.narrativeDescription.isNullOrEmpty()
+                        }
 
                     state = state.copy(
-                        agents = agents.orEmpty()
+                        maps = maps.orEmpty()
                     )
                 }
 
