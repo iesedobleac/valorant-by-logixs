@@ -33,9 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.isaacdelosreyes.valorantforlogixs.R
 import com.isaacdelosreyes.valorantforlogixs.core.presentation.ErrorScreen
+import com.isaacdelosreyes.valorantforlogixs.core.presentation.ValorantLoader
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.BlackGray
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Cyprus
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.RobotoFamily
@@ -52,6 +53,7 @@ fun HomeScreen(
     if (state.showErrorScreen) {
         ErrorScreen(
             errorMessage = stringResource(id = R.string.default_error),
+            showBackButton = false,
             clickOnRetryButton = {
                 viewModel.getAgents()
             },
@@ -114,9 +116,14 @@ fun HomeScreen(
                                     .background(Brush.verticalGradient(colors = colors))
                             )
 
-                            AsyncImage(
+                            SubcomposeAsyncImage(
                                 model = it.fullPortraitV2,
                                 contentDescription = "",
+                                loading = {
+                                    ValorantLoader(
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                },
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxSize()

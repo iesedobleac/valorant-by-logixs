@@ -30,6 +30,10 @@ class MapDetailViewModel @Inject constructor(
     private val mapUuid: String? = savedStateHandle[MAP_UUID]
 
     init {
+        getMapInformation()
+    }
+
+    fun getMapInformation() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val call = getMapByUuidUseCase(mapUuid.orEmpty())) {
 
@@ -43,6 +47,7 @@ class MapDetailViewModel @Inject constructor(
 
                     withContext(Dispatchers.Main) {
                         state = state.copy(
+                            showLoaderComponent = false,
                             showErrorScreen = true
                         )
                     }
@@ -51,6 +56,7 @@ class MapDetailViewModel @Inject constructor(
                 is NetworkResult.Exception -> {
                     withContext(Dispatchers.Main) {
                         state = state.copy(
+                            showLoaderComponent = false,
                             showErrorScreen = true
                         )
                     }
@@ -65,6 +71,7 @@ class MapDetailViewModel @Inject constructor(
         withContext(Dispatchers.Main) {
             state = state.copy(
                 map = map,
+                showLoaderComponent = false,
                 showErrorScreen = false
             )
         }

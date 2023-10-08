@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,7 +46,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.isaacdelosreyes.valorantforlogixs.R
+import com.isaacdelosreyes.valorantforlogixs.core.presentation.ErrorScreen
+import com.isaacdelosreyes.valorantforlogixs.core.presentation.ValorantLoader
+import com.isaacdelosreyes.valorantforlogixs.ui.theme.BlackGray
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.RobotoFamily
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.SherpaBlue50
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Tugnsten
@@ -61,215 +67,123 @@ fun AgentDetailScreen(viewModel: AgentDetailViewModel = hiltViewModel(), navigat
         Color(colorAndroid)
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        Color.Black
-                    ),
-                    endY = 0.5f
-                )
-            )
-    )
+    if (state.showErrorScreen) {
+        ErrorScreen(
+            imageDrawableRes = R.drawable.no_information,
+            errorMessage = stringResource(id = R.string.no_agent_error),
+            navigateBack = { navigateBack() },
+            clickOnRetryButton = {
+                viewModel.getAgentInformation()
+            },
+            modifier = Modifier.background(BlackGray)
+        )
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(
-                if (colors?.isNotEmpty() == true) {
-                    Brush.verticalGradient(colors = colors)
+    } else {
 
-                } else {
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.White,
-                            Color.Transparent
-                        )
-                    )
-                }
-            )
-    ) {
-
-        Column(modifier = Modifier.fillMaxSize()) {
-
+        if (state.showLoaderComponent) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(0.5f)
+                    .fillMaxSize()
+                    .background(BlackGray)
             ) {
-
-                IconButton(
-                    onClick = { navigateBack() },
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(start = 20.dp, top = 20.dp),
-                    colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "",
-                    )
-                }
-
-                AsyncImage(
-                    model = agent?.fullPortrait,
-                    contentDescription = "",
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = MaterialTheme.colorScheme.secondary
                 )
-
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(start = 20.dp)
-                ) {
-
-                    Text(
-                        text = agent?.displayName.orEmpty().uppercase(),
-                        fontFamily = Tugnsten,
-                        fontSize = 90.sp,
-                        color = Color.White,
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(bottom = 20.dp)
-                    ) {
-
-                        AsyncImage(
-                            model = agent?.role?.displayIcon,
-                            contentDescription = "",
-                            modifier = Modifier.size(10.dp)
-                        )
-
-                        Text(
-                            text = agent?.role?.displayName.orEmpty(),
-                            fontSize = 16.sp,
-                            color = Color.White,
-                            fontFamily = RobotoFamily,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(start = 10.dp)
-                        )
-                    }
-                }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+        } else {
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(0.5f)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                    .background(SherpaBlue50)
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black
+                            ),
+                            endY = 0.5f
+                        )
+                    )
+            )
+
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        if (colors?.isNotEmpty() == true) {
+                            Brush.verticalGradient(colors = colors)
+
+                        } else {
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.White,
+                                    Color.Transparent
+                                )
+                            )
+                        }
+                    )
             ) {
 
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 25.dp, vertical = 20.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
+                Column(modifier = Modifier.fillMaxSize()) {
 
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-
-                        Image(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "",
-                            colorFilter = ColorFilter.tint(Color.White),
-                            modifier = Modifier.size(22.dp)
-                        )
-
-                        Text(
-                            text = "Biografía".uppercase(),
-                            fontSize = 26.sp,
-                            fontFamily = Tugnsten,
-                            color = Color.White,
-                            modifier = Modifier.padding(start = 10.dp)
-                        )
-
-                        Divider(
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.padding(start = 10.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Text(
-                        text = agent?.description.orEmpty(),
-                        fontSize = 14.sp,
-                        fontFamily = RobotoFamily,
-                        color = WhiteBroken,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 8,
-                    )
-
-                    Spacer(modifier = Modifier.height(30.dp))
-
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-
-                        Divider(
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier
-                                .weight(1f)
-                        )
-
-                        Text(
-                            text = "Habilidades".uppercase(),
-                            fontSize = 26.sp,
-                            fontFamily = Tugnsten,
-                            color = Color.White,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Divider(
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier
-                                .weight(1f)
-                        )
-
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    LazyRow(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f)
                     ) {
 
-                        items(agent?.abilities.orEmpty()) {
+                        IconButton(
+                            onClick = { navigateBack() },
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .padding(start = 20.dp, top = 20.dp),
+                            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "",
+                            )
+                        }
 
-                            val isSelected = state.selectedAbility == it
+                        SubcomposeAsyncImage(
+                            model = agent?.fullPortrait,
+                            contentDescription = "",
+                            loading = { ValorantLoader() }
+                        )
 
-                            Card(
-                                border = BorderStroke(1.dp, Color.White),
-                                modifier = Modifier
-                                    .size(60.dp)
-                                    .clickable {
-                                        if (!isSelected) viewModel.changeSelectedAbility(it)
-                                    },
-                                shape = RoundedCornerShape(6.dp)
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(start = 20.dp)
+                        ) {
+
+                            Text(
+                                text = agent?.displayName.orEmpty().uppercase(),
+                                fontFamily = Tugnsten,
+                                fontSize = 90.sp,
+                                color = Color.White,
+                            )
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(bottom = 20.dp)
                             ) {
-                                AsyncImage(
-                                    model = it.displayIcon,
+
+                                SubcomposeAsyncImage(
+                                    model = agent?.role?.displayIcon,
                                     contentDescription = "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(
-                                            if (isSelected) {
-                                                MaterialTheme.colorScheme.secondary
-                                            } else {
-                                                Color.Transparent
-                                            }
-                                        )
+                                    modifier = Modifier.size(10.dp)
+                                )
+
+                                Text(
+                                    text = agent?.role?.displayName.orEmpty(),
+                                    fontSize = 16.sp,
+                                    color = Color.White,
+                                    fontFamily = RobotoFamily,
+                                    fontWeight = FontWeight.Medium,
+                                    modifier = Modifier.padding(start = 10.dp)
                                 )
                             }
                         }
@@ -277,30 +191,151 @@ fun AgentDetailScreen(viewModel: AgentDetailViewModel = hiltViewModel(), navigat
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text(
-                        text = state.selectedAbility?.displayName.orEmpty(),
-                        fontSize = 18.sp,
-                        color = Color.White,
-                        fontFamily = RobotoFamily,
-                        fontWeight = FontWeight.Bold,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f)
+                            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                            .background(SherpaBlue50)
+                    ) {
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 25.dp, vertical = 20.dp)
+                                .verticalScroll(rememberScrollState())
+                        ) {
 
-                    Text(
-                        text = state.selectedAbility?.description.orEmpty(),
-                        fontSize = 14.sp,
-                        color = WhiteBroken,
-                        fontFamily = RobotoFamily,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 8,
-                    )
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+
+                                Image(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "",
+                                    colorFilter = ColorFilter.tint(Color.White),
+                                    modifier = Modifier.size(22.dp)
+                                )
+
+                                Text(
+                                    text = "Biografía".uppercase(),
+                                    fontSize = 26.sp,
+                                    fontFamily = Tugnsten,
+                                    color = Color.White,
+                                    modifier = Modifier.padding(start = 10.dp)
+                                )
+
+                                Divider(
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier.padding(start = 10.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Text(
+                                text = agent?.description.orEmpty(),
+                                fontSize = 14.sp,
+                                fontFamily = RobotoFamily,
+                                color = WhiteBroken,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 8,
+                            )
+
+                            Spacer(modifier = Modifier.height(30.dp))
+
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+
+                                Divider(
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                )
+
+                                Text(
+                                    text = "Habilidades".uppercase(),
+                                    fontSize = 26.sp,
+                                    fontFamily = Tugnsten,
+                                    color = Color.White,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.weight(1f)
+                                )
+
+                                Divider(
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                )
+
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            LazyRow(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+
+                                items(agent?.abilities.orEmpty()) {
+
+                                    val isSelected = state.selectedAbility == it
+
+                                    Card(
+                                        border = BorderStroke(1.dp, Color.White),
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .clickable {
+                                                if (!isSelected) viewModel.changeSelectedAbility(it)
+                                            },
+                                        shape = RoundedCornerShape(6.dp)
+                                    ) {
+                                        SubcomposeAsyncImage(
+                                            model = it.displayIcon,
+                                            contentDescription = "",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(
+                                                    if (isSelected) {
+                                                        MaterialTheme.colorScheme.secondary
+                                                    } else {
+                                                        Color.Transparent
+                                                    }
+                                                )
+                                        )
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Text(
+                                text = state.selectedAbility?.displayName.orEmpty(),
+                                fontSize = 18.sp,
+                                color = Color.White,
+                                fontFamily = RobotoFamily,
+                                fontWeight = FontWeight.Bold,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Text(
+                                text = state.selectedAbility?.description.orEmpty(),
+                                fontSize = 14.sp,
+                                color = WhiteBroken,
+                                fontFamily = RobotoFamily,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 8,
+                            )
+                        }
+                    }
                 }
             }
         }
     }
-
 }
