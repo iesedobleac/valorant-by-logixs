@@ -1,4 +1,4 @@
-package com.isaacdelosreyes.valorantforlogixs.detail.presentation
+package com.isaacdelosreyes.valorantforlogixs.agentdetail.presentation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.isaacdelosreyes.valorantforlogixs.core.data.model.Ability
-import com.isaacdelosreyes.valorantforlogixs.core.data.model.toDomain
+import com.isaacdelosreyes.valorantforlogixs.agentdetail.domain.usecase.GetAgentByUuidUseCase
+import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.Ability
+import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.toDomain
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.NetworkResult
-import com.isaacdelosreyes.valorantforlogixs.detail.domain.usecase.GetAgentByUuidUseCase
 import com.isaacdelosreyes.valorantforlogixs.utils.AGENT_UUID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,12 +17,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(
+class AgentDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getAgentByUuidUseCase: GetAgentByUuidUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(DetailState())
+    var state by mutableStateOf(AgentDetailState())
         private set
 
     private val agentUuid: String? = savedStateHandle[AGENT_UUID]

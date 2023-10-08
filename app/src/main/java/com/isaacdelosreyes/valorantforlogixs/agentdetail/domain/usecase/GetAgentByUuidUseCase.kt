@@ -1,4 +1,4 @@
-package com.isaacdelosreyes.valorantforlogixs.detail.domain.usecase
+package com.isaacdelosreyes.valorantforlogixs.agentdetail.domain.usecase
 
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.ValorantRepository
 import javax.inject.Inject

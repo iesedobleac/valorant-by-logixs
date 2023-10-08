@@ -1,4 +1,4 @@
-package com.isaacdelosreyes.valorantforlogixs.detail.presentation
+package com.isaacdelosreyes.valorantforlogixs.agentdetail.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +51,7 @@ import com.isaacdelosreyes.valorantforlogixs.ui.theme.Tugnsten
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.WhiteBroken
 
 @Composable
-fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), goToBack: () -> Unit) {
+fun AgentDetailScreen(viewModel: AgentDetailViewModel = hiltViewModel(), navigateBack: () -> Unit) {
 
     val state = viewModel.state
     val agent = state.agent
@@ -100,10 +102,10 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), goToBack: () -> U
             ) {
 
                 IconButton(
-                    onClick = { goToBack() },
+                    onClick = { navigateBack() },
                     modifier = Modifier
                         .align(Alignment.TopStart)
-                        .padding(start = 20.dp, top = 10.dp),
+                        .padding(start = 20.dp, top = 20.dp),
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
                 ) {
                     Icon(
@@ -138,12 +140,12 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), goToBack: () -> U
                         AsyncImage(
                             model = agent?.role?.displayIcon,
                             contentDescription = "",
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(10.dp)
                         )
 
                         Text(
                             text = agent?.role?.displayName.orEmpty(),
-                            fontSize = 20.sp,
+                            fontSize = 16.sp,
                             color = Color.White,
                             fontFamily = RobotoFamily,
                             fontWeight = FontWeight.Medium,
@@ -181,10 +183,16 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), goToBack: () -> U
                         )
 
                         Text(
-                            text = "Biografía",
+                            text = "Biografía".uppercase(),
                             fontSize = 26.sp,
                             fontFamily = Tugnsten,
                             color = Color.White,
+                            modifier = Modifier.padding(start = 10.dp)
+                        )
+
+                        Divider(
+                            thickness = 1.dp,
+                            color = RadicalRed,
                             modifier = Modifier.padding(start = 10.dp)
                         )
                     }
@@ -202,12 +210,33 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), goToBack: () -> U
 
                     Spacer(modifier = Modifier.height(30.dp))
 
-                    Text(
-                        text = "Habilidades",
-                        fontSize = 26.sp,
-                        fontFamily = Tugnsten,
-                        color = Color.White,
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                        Divider(
+                            thickness = 1.dp,
+                            color = RadicalRed,
+                            modifier = Modifier
+                                .weight(1f)
+                        )
+
+                        Text(
+                            text = "Habilidades".uppercase(),
+                            fontSize = 26.sp,
+                            fontFamily = Tugnsten,
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        Divider(
+                            thickness = 1.dp,
+                            color = RadicalRed,
+                            modifier = Modifier
+                                .padding(start = 10.dp)
+                                .weight(1f)
+                        )
+
+                    }
 
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -250,8 +279,21 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), goToBack: () -> U
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
+                        text = state.selectedAbility?.displayName.orEmpty(),
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        fontFamily = RobotoFamily,
+                        fontWeight = FontWeight.Bold,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Text(
                         text = state.selectedAbility?.description.orEmpty(),
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         color = WhiteBroken,
                         fontFamily = RobotoFamily,
                         overflow = TextOverflow.Ellipsis,
@@ -260,8 +302,6 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), goToBack: () -> U
                 }
             }
         }
-
-
     }
 
 }
