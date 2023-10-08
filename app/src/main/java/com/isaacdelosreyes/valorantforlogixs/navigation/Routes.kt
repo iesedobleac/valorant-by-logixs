@@ -2,6 +2,8 @@ package com.isaacdelosreyes.valorantforlogixs.navigation
 
 sealed class Routes(val route: String) {
 
+    object Launcher: Routes("launcher")
+
     object Home : Routes("home")
 
     object AgentDetail: Routes("agent_detail") {
