@@ -157,7 +157,6 @@ fun HomeScreen(
                                     fontSize = 14.sp,
                                     textAlign = TextAlign.Center,
                                     fontFamily = RobotoFamily,
-                                    fontWeight = FontWeight.Bold,
                                     color = Color.White,
                                     modifier = Modifier.fillMaxWidth()
                                 )
