@@ -85,82 +85,84 @@ fun MapDetailScreen(viewModel: MapDetailViewModel = hiltViewModel(), navigateBac
         } else {
 
             Column(
-                Modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .background(BlackGray)
             ) {
 
-                Box {
-
-                    val request = ImageRequest.Builder(LocalContext.current)
-                        .data(map?.splash)
-                        .transformations(
-                            listOf(
-                                BlurTransformation(
-                                    scale = 0.5f,
-                                    radius = 25
-                                )
+                val request = ImageRequest.Builder(LocalContext.current)
+                    .data(map?.splash)
+                    .transformations(
+                        listOf(
+                            BlurTransformation(
+                                scale = 0.5f,
+                                radius = 25
                             )
                         )
-                        .build()
+                    )
+                    .build()
 
-                    Box(
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.5f)
+                ) {
+
+                    SubcomposeAsyncImage(
+                        model = request,
+                        contentDescription = "",
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
+                            .fillMaxSize()
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomEnd = 20.dp,
+                                    bottomStart = 20.dp
+                                )
+                            ),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
                     ) {
 
-                        SubcomposeAsyncImage(
-                            model = request,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp)),
-                            contentScale = ContentScale.Crop
-                        )
 
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
 
+                            Column(modifier = Modifier.align(Alignment.Center)) {
 
-                            Box(modifier = Modifier.fillMaxSize()) {
+                                Text(
+                                    text = map?.displayName.orEmpty().uppercase(),
+                                    fontFamily = Tugnsten,
+                                    fontSize = 90.sp,
+                                    color = Color.White,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
 
-                                Column(modifier = Modifier.align(Alignment.Center)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
 
-                                    Text(
-                                        text = map?.displayName.orEmpty().uppercase(),
-                                        fontFamily = Tugnsten,
-                                        fontSize = 90.sp,
-                                        color = Color.White,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier.fillMaxWidth()
+                                    Image(
+                                        imageVector = Icons.Default.LocationOn,
+                                        contentDescription = "",
+                                        colorFilter = ColorFilter.tint(
+                                            Color.White
+                                        ),
+                                        modifier = Modifier.size(16.dp)
                                     )
 
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-
-                                        Image(
-                                            imageVector = Icons.Default.LocationOn,
-                                            contentDescription = "",
-                                            colorFilter = ColorFilter.tint(
-                                                Color.White
-                                            ),
-                                            modifier = Modifier.size(16.dp)
-                                        )
-
-                                        Text(
-                                            text = map?.coordinates.orEmpty().uppercase(),
-                                            fontFamily = RobotoFamily,
-                                            fontSize = 16.sp,
-                                            color = Color.White,
-                                            modifier = Modifier.padding(start = 10.dp)
-                                        )
-                                    }
+                                    Text(
+                                        text = map?.coordinates.orEmpty().uppercase(),
+                                        fontFamily = RobotoFamily,
+                                        fontSize = 16.sp,
+                                        color = Color.White,
+                                        modifier = Modifier.padding(start = 10.dp)
+                                    )
                                 }
                             }
                         }
@@ -186,6 +188,7 @@ fun MapDetailScreen(viewModel: MapDetailViewModel = hiltViewModel(), navigateBac
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .weight(0.5f)
                         .verticalScroll(rememberScrollState())
                 ) {
 
