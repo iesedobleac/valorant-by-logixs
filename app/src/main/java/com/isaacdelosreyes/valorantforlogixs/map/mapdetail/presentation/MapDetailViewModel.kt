@@ -9,10 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.map.MapByUuidDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.map.toDomain
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.NetworkResult
+import com.isaacdelosreyes.valorantforlogixs.core.di.IoDispatcher
+import com.isaacdelosreyes.valorantforlogixs.core.di.MainDispatcher
 import com.isaacdelosreyes.valorantforlogixs.map.mapdetail.domain.usecase.GetMapByUuidUseCase
 import com.isaacdelosreyes.valorantforlogixs.utils.MAP_UUID
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -21,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MapDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getMapByUuidUseCase: GetMapByUuidUseCase
+    private val getMapByUuidUseCase: GetMapByUuidUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     var state by mutableStateOf(MapDetailState())
@@ -34,7 +38,7 @@ class MapDetailViewModel @Inject constructor(
     }
 
     fun getMapInformation() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val call = getMapByUuidUseCase(mapUuid.orEmpty())) {
 
                 is NetworkResult.Success -> {
@@ -45,7 +49,7 @@ class MapDetailViewModel @Inject constructor(
                 is NetworkResult.Error -> {
                     Timber.e(message = call.message)
 
-                    withContext(Dispatchers.Main) {
+                    withContext(mainDispatcher) {
                         state = state.copy(
                             showLoaderComponent = false,
                             showErrorScreen = true
@@ -54,7 +58,7 @@ class MapDetailViewModel @Inject constructor(
                 }
 
                 is NetworkResult.Exception -> {
-                    withContext(Dispatchers.Main) {
+                    withContext(mainDispatcher) {
                         state = state.copy(
                             showLoaderComponent = false,
                             showErrorScreen = true
@@ -68,7 +72,7 @@ class MapDetailViewModel @Inject constructor(
     private suspend fun parseMapDataAndSetState(call: NetworkResult.Success<MapByUuidDto>) {
         val map = call.data.map.toDomain()
 
-        withContext(Dispatchers.Main) {
+        withContext(mainDispatcher) {
             state = state.copy(
                 map = map,
                 showLoaderComponent = false,

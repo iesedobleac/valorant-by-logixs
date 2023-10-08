@@ -11,9 +11,11 @@ import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.Ability
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.AgentByUuidDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.toDomain
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.NetworkResult
+import com.isaacdelosreyes.valorantforlogixs.core.di.IoDispatcher
+import com.isaacdelosreyes.valorantforlogixs.core.di.MainDispatcher
 import com.isaacdelosreyes.valorantforlogixs.utils.AGENT_UUID
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -22,7 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AgentDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getAgentByUuidUseCase: GetAgentByUuidUseCase
+    private val getAgentByUuidUseCase: GetAgentByUuidUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     var state by mutableStateOf(AgentDetailState())
@@ -35,7 +39,7 @@ class AgentDetailViewModel @Inject constructor(
     }
 
     fun getAgentInformation() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val call = getAgentByUuidUseCase(agentUuid.orEmpty())) {
 
                 is NetworkResult.Success -> {
@@ -46,7 +50,7 @@ class AgentDetailViewModel @Inject constructor(
                 is NetworkResult.Error -> {
                     Timber.e(message = call.message)
 
-                    withContext(Dispatchers.Main) {
+                    withContext(mainDispatcher) {
                         state = state.copy(
                             showErrorScreen = true,
                             showLoaderComponent = true
@@ -55,7 +59,7 @@ class AgentDetailViewModel @Inject constructor(
                 }
 
                 is NetworkResult.Exception -> {
-                    withContext(Dispatchers.Main) {
+                    withContext(mainDispatcher) {
                         state = state.copy(
                             showErrorScreen = true,
                             showLoaderComponent = true
@@ -69,7 +73,7 @@ class AgentDetailViewModel @Inject constructor(
     private suspend fun parseAgentDataAndSetState(call: NetworkResult.Success<AgentByUuidDto>) {
         val agent = call.data.agent.toDomain()
 
-        withContext(Dispatchers.Main) {
+        withContext(mainDispatcher) {
             state = state.copy(
                 agent = agent,
                 selectedAbility = agent.abilities[0],
