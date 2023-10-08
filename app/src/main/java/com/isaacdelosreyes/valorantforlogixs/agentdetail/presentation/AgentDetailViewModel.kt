@@ -31,6 +31,10 @@ class AgentDetailViewModel @Inject constructor(
     private val agentUuid: String? = savedStateHandle[AGENT_UUID]
 
     init {
+        getAgentInformation()
+    }
+
+    fun getAgentInformation() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val call = getAgentByUuidUseCase(agentUuid.orEmpty())) {
 
@@ -45,7 +49,7 @@ class AgentDetailViewModel @Inject constructor(
                     withContext(Dispatchers.Main) {
                         state = state.copy(
                             showErrorScreen = true,
-                            showLoaderComponent = false
+                            showLoaderComponent = true
                         )
                     }
                 }
@@ -54,7 +58,7 @@ class AgentDetailViewModel @Inject constructor(
                     withContext(Dispatchers.Main) {
                         state = state.copy(
                             showErrorScreen = true,
-                            showLoaderComponent = false
+                            showLoaderComponent = true
                         )
                     }
                 }

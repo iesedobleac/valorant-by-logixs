@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,9 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.isaacdelosreyes.valorantforlogixs.R
 import com.isaacdelosreyes.valorantforlogixs.core.presentation.ErrorScreen
+import com.isaacdelosreyes.valorantforlogixs.core.presentation.ValorantLoader
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.BlackGray
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Tugnsten
 
@@ -38,6 +40,7 @@ fun MapsScreen(viewModel: MapsViewModel = hiltViewModel(), navigateToMapDetail: 
     if (state.showErrorScreen) {
         ErrorScreen(
             errorMessage = stringResource(id = R.string.default_error),
+            showBackButton = false,
             clickOnRetryButton = {
                 viewModel.getMaps()
             },
@@ -56,11 +59,16 @@ fun MapsScreen(viewModel: MapsViewModel = hiltViewModel(), navigateToMapDetail: 
                         .clickable { navigateToMapDetail(it.uuid) }
                     ) {
 
-                        AsyncImage(
+                        SubcomposeAsyncImage(
                             model = it.splash,
                             contentDescription = "",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            loading = {
+                                ValorantLoader(
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
                         )
 
                         Box(
