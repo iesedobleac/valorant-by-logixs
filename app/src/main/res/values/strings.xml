@@ -4,6 +4,12 @@
     <string name="top_app_bar_home_title">Inicio</string>
     <string name="top_app_bar_maps_title">Mapas</string>
 
+    <string name="biography">Biografía</string>
+    <string name="abilities">Habilidades</string>
+    <string name="description">Descripción</string>
+    <string name="map">Mapa</string>
+
+    <string name="attention">Atención</string>
     <string name="default_error">Ha ocurrido un problema agente. Por favor, vuelve a intentarlo</string>
     <string name="no_agent_error">No hemos podido cargar la información del agente, pero que no cunda el pánico</string>
     <string name="no_map_error">Lo siento, ahora mismo no encontramos el mapa, prueba a tirar de Google Maps</string>

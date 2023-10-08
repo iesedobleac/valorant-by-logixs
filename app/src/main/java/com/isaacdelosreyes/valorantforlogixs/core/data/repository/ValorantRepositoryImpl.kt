@@ -5,6 +5,7 @@ import com.isaacdelosreyes.valorantforlogixs.core.data.model.agent.AgentsDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.map.MapByUuidDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.map.MapsDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.remote.retrofit.ValorantWs
+import com.isaacdelosreyes.valorantforlogixs.utils.LocaleUtil
 import javax.inject.Inject
 
 interface ValorantRepository {
@@ -20,19 +21,28 @@ class ValorantRepositoryImpl @Inject constructor(
 ) : ValorantRepository {
 
     override suspend fun getAgents() = handleApi {
-        valorantWs.getAllAgents()
+        valorantWs.getAllAgents(
+            language = LocaleUtil.getLanguageForWebServices()
+        )
     }
 
     override suspend fun getMaps() = handleApi {
-        valorantWs.getAllMaps()
+        valorantWs.getAllMaps(
+            language = LocaleUtil.getLanguageForWebServices()
+        )
     }
 
     override suspend fun getAgentByUuid(uuid: String) = handleApi {
-        valorantWs.getAgentByUuid(uuid)
+        valorantWs.getAgentByUuid(
+            uuid = uuid,
+            language = LocaleUtil.getLanguageForWebServices()
+        )
     }
 
     override suspend fun getMapByUuid(uuid: String) = handleApi {
-        valorantWs.getMapByUuid(uuid)
+        valorantWs.getMapByUuid(
+            uuid = uuid,
+            language = LocaleUtil.getLanguageForWebServices()
+        )
     }
-
 }
