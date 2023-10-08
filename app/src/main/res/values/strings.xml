@@ -3,4 +3,6 @@
 
     <string name="top_app_bar_home_title">Inicio</string>
     <string name="top_app_bar_maps_title">Mapas</string>
+
+    <string name="default_error">Ha ocurrido un problema agente. Por favor, espera unos minutos y vuelve a intentarlo</string>
 </resources>

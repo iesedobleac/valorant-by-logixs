@@ -27,6 +27,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.isaacdelosreyes.valorantforlogixs.ui.theme.RadicalRed
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.RobotoFamily
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.SherpaBlue50
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Tugnsten
@@ -192,7 +192,7 @@ fun AgentDetailScreen(viewModel: AgentDetailViewModel = hiltViewModel(), navigat
 
                         Divider(
                             thickness = 1.dp,
-                            color = RadicalRed,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier.padding(start = 10.dp)
                         )
                     }
@@ -214,7 +214,7 @@ fun AgentDetailScreen(viewModel: AgentDetailViewModel = hiltViewModel(), navigat
 
                         Divider(
                             thickness = 1.dp,
-                            color = RadicalRed,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier
                                 .weight(1f)
                         )
@@ -230,9 +230,8 @@ fun AgentDetailScreen(viewModel: AgentDetailViewModel = hiltViewModel(), navigat
 
                         Divider(
                             thickness = 1.dp,
-                            color = RadicalRed,
+                            color = MaterialTheme.colorScheme.secondary,
                             modifier = Modifier
-                                .padding(start = 10.dp)
                                 .weight(1f)
                         )
 
@@ -266,7 +265,7 @@ fun AgentDetailScreen(viewModel: AgentDetailViewModel = hiltViewModel(), navigat
                                         .fillMaxSize()
                                         .background(
                                             if (isSelected) {
-                                                RadicalRed
+                                                MaterialTheme.colorScheme.secondary
                                             } else {
                                                 Color.Transparent
                                             }

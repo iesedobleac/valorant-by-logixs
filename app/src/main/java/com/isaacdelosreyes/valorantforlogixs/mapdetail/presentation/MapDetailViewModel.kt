@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.isaacdelosreyes.valorantforlogixs.core.data.model.map.MapByUuidDto
 import com.isaacdelosreyes.valorantforlogixs.core.data.model.map.toDomain
 import com.isaacdelosreyes.valorantforlogixs.core.data.repository.NetworkResult
 import com.isaacdelosreyes.valorantforlogixs.mapdetail.domain.usecase.GetMapByUuidUseCase
@@ -13,6 +14,8 @@ import com.isaacdelosreyes.valorantforlogixs.utils.MAP_UUID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,22 +33,40 @@ class MapDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val call = getMapByUuidUseCase(mapUuid.orEmpty())) {
 
-                is NetworkResult.Error -> {
+                is NetworkResult.Success -> {
+                    Timber.i(call.data.toString())
+                    parseMapDataAndSetState(call)
+                }
 
+                is NetworkResult.Error -> {
+                    Timber.e(message = call.message)
+
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(
+                            showErrorScreen = true
+                        )
+                    }
                 }
 
                 is NetworkResult.Exception -> {
-
-                }
-
-                is NetworkResult.Success -> {
-                    val map = call.data.map.toDomain()
-
-                    state = state.copy(
-                        map = map,
-                    )
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(
+                            showErrorScreen = true
+                        )
+                    }
                 }
             }
+        }
+    }
+
+    private suspend fun parseMapDataAndSetState(call: NetworkResult.Success<MapByUuidDto>) {
+        val map = call.data.map.toDomain()
+
+        withContext(Dispatchers.Main) {
+            state = state.copy(
+                map = map,
+                showErrorScreen = false
+            )
         }
     }
 }

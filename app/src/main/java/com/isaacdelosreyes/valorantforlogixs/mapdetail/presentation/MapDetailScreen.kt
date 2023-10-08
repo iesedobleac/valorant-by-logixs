@@ -25,6 +25,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,7 +43,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.BlackGray
-import com.isaacdelosreyes.valorantforlogixs.ui.theme.RadicalRed
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.RobotoFamily
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.Tugnsten
 import com.isaacdelosreyes.valorantforlogixs.ui.theme.WhiteBroken
@@ -186,7 +186,7 @@ fun MapDetailScreen(viewModel: MapDetailViewModel = hiltViewModel(), navigateBac
 
                     Divider(
                         thickness = 1.dp,
-                        color = RadicalRed,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.padding(start = 10.dp)
                     )
                 }
@@ -207,7 +207,7 @@ fun MapDetailScreen(viewModel: MapDetailViewModel = hiltViewModel(), navigateBac
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Divider(
                         thickness = 1.dp,
-                        color = RadicalRed,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier
                             .weight(1f)
                     )
@@ -223,9 +223,8 @@ fun MapDetailScreen(viewModel: MapDetailViewModel = hiltViewModel(), navigateBac
 
                     Divider(
                         thickness = 1.dp,
-                        color = RadicalRed,
-                        modifier = Modifier
-                            .weight(1f)
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -241,6 +240,5 @@ fun MapDetailScreen(viewModel: MapDetailViewModel = hiltViewModel(), navigateBac
                 )
             }
         }
-
     }
 }
