@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.ValorantForLogixs" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.SplashScreen.MySplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#08121A</item>
+        <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <item name="windowSplashScreenAnimationDuration">600</item>
+        <item name="postSplashScreenTheme">@style/Theme.ValorantForLogixs</item>
+    </style>
+
 </resources>

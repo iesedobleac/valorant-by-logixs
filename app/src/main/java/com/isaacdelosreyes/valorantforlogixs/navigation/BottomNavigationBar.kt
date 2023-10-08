@@ -66,4 +66,5 @@ fun currentRoute(navController: NavHostController): String {
 fun showNavigationBar(currentRoute: String): Boolean {
     return currentRoute.contains(Routes.AgentDetail.route)
             || currentRoute.contains(Routes.MapDetail.route)
+            || currentRoute.contains(Routes.Launcher.route)
 }
